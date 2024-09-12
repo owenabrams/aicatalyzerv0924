@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Ollama FAISS</title>
+    <script src="{{ url_for('static', filename='js/rag_ollama_faiss.js') }}"></script> <!-- Include JS file -->
+</head>
+<body>
+    <h1>RAG Ollama FAISS</h1>
+    
+    <!-- Form for uploading PDFs -->
+    <h2>Upload PDFs</h2>
+    <form id="pdfUploadForm">
+        <label for="folder_path">Folder Path:</label>
+        <input type="text" id="folder_path" name="folder_path" placeholder="Path to folder containing PDFs">
+        <button type="submit">Upload PDFs</button>
+    </form>
+    <div id="uploadMessage"></div> <!-- To display success/error message for upload -->
+
+    <hr>
+
+    <!-- Form for querying the system -->
+    <h2>Ask a Question</h2>
+    <form id="queryForm">
+        <label for="question">Question:</label>
+        <input type="text" id="question" name="question" placeholder="Enter your question">
+        <button type="submit">Ask Question</button>
+    </form>
+    <div id="queryResult"></div> <!-- To display the answer from the system -->
+
+</body>
+</html>
