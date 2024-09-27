@@ -17,10 +17,10 @@ from langchain_community.vectorstores import FAISS, Pinecone
 #from langchain.embeddings.ollama import OllamaEmbeddings
 
 from langchain_community.embeddings.ollama import OllamaEmbeddings
-from langchain_community.llms import Llama  # Update this import as well
+# from langchain_community.llms import Llama  # Update this import as well
 
 
-from langchain.llms import Llama
+#from langchain.llms import Llama
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)

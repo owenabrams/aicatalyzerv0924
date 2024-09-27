@@ -2,6 +2,8 @@ import json
 import logging
 from pathlib import Path
 
+from collections import defaultdict
+
 context_file = Path("context_data.json")
 
 def get_context(user_id):

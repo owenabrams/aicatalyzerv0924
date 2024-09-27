@@ -1,0 +1,70 @@
+aicatalyzerv0924/
+│
+├── app/
+│   ├── __init__.py               # Application factory and initialization
+│   ├── models.py                 # Database models (e.g., Message)
+│   ├── context_manager.py        # Helper functions for managing conversation context
+│   ├── templates/                # HTML templates (e.g., chat.html, index.html)
+│   │   ├── chat.html
+│   │   └── ...
+│   ├── static/                   # Static files (e.g., CSS, JS, images)
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── ...
+│   ├── blueprints/               # Folder for application blueprints
+│   │   ├── main/
+│   │   │   ├── __init__.py       # Blueprint registration
+│   │   │   ├── views.py          # Contains the /chatgpt route and other main routes
+│   │   │   ├── templates/        # Templates specific to this blueprint (optional)
+│   │   │   │   ├── main_template.html
+│   │   │   │   └── ...
+│   │   │   └── static/           # Static files specific to this blueprint (optional)
+│   │   ├── rag_ollama_faiss/
+│   │   │   ├── __init__.py       # Blueprint for the RAG service
+│   │   │   ├── views.py          # Views for RAG-related routes
+│   │   │   ├── rag.py            # Core RAG implementation
+│   │   │   ├── templates/        # Templates specific to this blueprint
+│   │   │   │   ├── rag_template.html
+│   │   │   │   └── ...
+│   │   │   └── static/           # Static files specific to this blueprint (optional)
+│   │   └── ...
+│   ├── extensions/               # Optional: Initialize and import extensions
+│   │   ├── __init__.py
+│   │   └── database.py           # Database and migration instances
+│   ├── services/                 # Optional: Additional services and utilities
+│   │   ├── chat_service.py       # ChatGPT-related logic and helper functions
+│   │   └── ...
+│   └── ...
+│
+├── migrations/                   # Database migration files
+│   ├── versions/
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── README
+│   └── ...
+│
+├── .env                          # Environment variables (e.g., OpenAI API key)
+├── .flaskenv                     # Flask environment settings
+├── requirements.txt              # Python dependencies
+├── run.py                        # Entry point for running the application
+└── README.md                     # Documentation for the project
+
+
+
+
+aicatalyzerv0924/
+│
+├── app/
+│   ├── __init__.py       # Initialize Flask app, register blueprints
+│   ├── models.py         # Database models
+│   ├── blueprints/
+│   │   ├── main/         # Main services folder containing the /chatgpt route
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py   # Contains the /chatgpt route
+│   │   │   └── other_service_files.py
+│   └── ...
+│
+├── migrations/           # For database migrations
+├── .env                  # Contains Twilio and OpenAI API keys
+├── run.py                # Main entry point for running the Flask app
+└── ...
