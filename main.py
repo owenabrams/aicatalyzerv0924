@@ -280,7 +280,13 @@ def send_whatsapp_message(user_id, text, media_urls):
     except Exception as e:
         logging.error(f"Error sending WhatsApp message: {e}")
 
+# Main Route
 
+@main_bp.route('/', methods=['GET'])
+def index():
+    return "This is a WhatsApp chatbot powered by GPT-3.5-turbo. Use the /webchat endpoint to interact with the bot."
+
+        
 #Primary Route Function: /chatgpt
 #This is the main function that handles incoming POST requests for the /chatgpt route. 
 #It processes user messages, interacts with the OpenAI API to generate responses, 
@@ -366,6 +372,6 @@ def chatgpt():
 
 
 """
-/Primary Route Function: /chatgpt * * *
+End /Primary Route Function: /chatgpt * * *
 """
 

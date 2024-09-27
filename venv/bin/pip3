@@ -1,4 +1,4 @@
-#!/Users/abe/Documents/GitHub/aicatalyzer/venv/bin/python3
+#!/Users/abe/Documents/GitHub/aicatalyzerv0924/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
