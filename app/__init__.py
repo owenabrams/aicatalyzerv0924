@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
+from .models import db, Message  # Import after db initialization
 from app.blueprints.main import main_bp  # Import the main blueprint
 
 db = SQLAlchemy()

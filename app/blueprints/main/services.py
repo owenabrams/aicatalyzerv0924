@@ -1,20 +1,26 @@
-from app.blueprints.rag_service_v1.rag import MultiDocRAGSystem as RAGServiceV1
-from app.blueprints.rag_service_v2.rag import MultiDocRAGSystem as RAGServiceV2
+# app/blueprints/main/services.py
+import os
+import openai
+import spacy
+from twilio.rest import Client
+from dotenv import load_dotenv
 
-def handle_user_query(question):
-    if "startup" in question.lower():
-        return handle_rag_service_v1(question)
-    elif "new feature" in question.lower():
-        return handle_rag_service_v2(question)
-    else:
-        return {"error": "No matching service found for this query."}, 404
+# Load environment variables
+load_dotenv()
 
-def handle_rag_service_v1(question):
-    rag_system = RAGServiceV1()
-    rag_system.load_vector_store()
-    return {"answer": rag_system.query(question)}, 200
+# Initialize OpenAI
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    raise ValueError("OPENAI_API_KEY must be set")
 
-def handle_rag_service_v2(question):
-    rag_system = RAGServiceV2()
-    rag_system.load_vector_store()
-    return {"answer": rag_system.query(question)}, 200
+# Initialize Twilio
+twilio_account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+twilio_whatsapp_number = os.getenv('TWILIO_WHATSAPP_NUMBER')
+if not twilio_account_sid or not twilio_auth_token:
+    raise ValueError("TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN must be set")
+
+twilio_client = Client(twilio_account_sid, twilio_auth_token)
+
+# Load the SpaCy model
+nlp = spacy.load("en_core_web_sm")

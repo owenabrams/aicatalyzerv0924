@@ -1,10 +1,14 @@
 # app/models.py
 
 from datetime import datetime
-from app import db
-from . import db
+
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.dialects.postgresql import JSON
+
+# app/models.py
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()  # Create the SQLAlchemy object here
 
 class QuestionNew(db.Model):
     id = db.Column(db.Integer, primary_key=True)

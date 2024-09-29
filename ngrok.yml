@@ -1,0 +1,6 @@
+authtoken: 2gMrHPKhMX5KCzz18Xt5lZ7PxcB_7Wt7FMgrfeMaYiSgjq1rA
+tunnels:
+  riseai:
+    proto: http
+    addr: 5000
+    hostname: riseai.ngrok.io

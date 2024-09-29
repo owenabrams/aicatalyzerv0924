@@ -1,3 +1,8 @@
+# app/blueprints/main/__init__.py
+from flask import Blueprint
+from .services import openai, twilio_client, nlp  # Import from the services module
+
+
 import openai
 from twilio.rest import Client
 import os

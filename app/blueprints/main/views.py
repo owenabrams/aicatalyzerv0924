@@ -1,15 +1,24 @@
 # app/blueprints/main/views.py
 
-from flask import current_app, request, jsonify
+import os
+import logging
+import openai
+from flask import Blueprint, request, jsonify
+from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
+
+
+
+from flask import current_app
 from app import db
 from app.models import Message
 from app.context_manager import save_context, get_context
 from .utils import handle_db_query, handle_media_query, send_whatsapp_message, rate_limited  # Import helper functions
-from .services import handle_user_query, handle_rag_service_v1, handle_rag_service_v2  # Service functions
-from twilio.twiml.messaging_response import MessagingResponse
-import openai
-import logging
+
+
+
 import traceback
+
 
 
 
