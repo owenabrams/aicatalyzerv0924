@@ -13,6 +13,8 @@ def update_env_file(public_url):
     env_file_path = '.env'
     set_key(env_file_path, 'NGROK_URL', public_url)
 
+
+
 def update_twilio_webhook(public_url):
     try:
         # Get Twilio credentials from .env file
@@ -20,10 +22,15 @@ def update_twilio_webhook(public_url):
         twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
         twilio_whatsapp_number = os.getenv('TWILIO_WHATSAPP_NUMBER')
 
+        # Print statements to debug
+        print(f"Twilio SID: {twilio_account_sid}")
+        print(f"Twilio Auth Token: {twilio_auth_token}")
+        print(f"Twilio WhatsApp Number: {twilio_whatsapp_number}")
+
         # Initialize Twilio client
         client = Client(twilio_account_sid, twilio_auth_token)
 
-        # Update the webhook URL for the Twilio WhatsApp number
+        # Fetch phone numbers and update webhook
         phone_numbers = client.incoming_phone_numbers.list(phone_number=twilio_whatsapp_number)
         if phone_numbers:
             phone_numbers[0].update(voice_url=f'{public_url}/chatgpt', sms_url=f'{public_url}/chatgpt')
@@ -32,6 +39,9 @@ def update_twilio_webhook(public_url):
             print(f"Could not find Twilio phone number: {twilio_whatsapp_number}")
     except Exception as e:
         print(f"Error updating Twilio webhook: {e}")
+
+
+
 
 def main():
     # Use the static Ngrok URL

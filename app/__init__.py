@@ -1,36 +1,54 @@
+# app/__init__.py
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
-from .models import db, Message  # Import after db initialization
-from app.blueprints.main import main_bp  # Import the main blueprint
-
+# Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
+    # Create Flask app instance
     app = Flask(__name__)
 
     # Load environment variables
     load_dotenv()
 
-    # Database configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///app.db')
+    # Set configuration
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///instance/app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Suppress warning
 
-    # Initialize extensions
+    # Initialize extensions with the app
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Register blueprints here
-    from app.blueprints.home import home_blueprint
-    from app.blueprints.rag_ollama_faiss import rag_blueprint_faiss
-    from app.blueprints.main import main_bp
-    
+    # Register blueprints
+    register_blueprints(app)
 
-    app.register_blueprint(home_blueprint)
-    app.register_blueprint(rag_blueprint_faiss, url_prefix='/api/faiss')
-    app.register_blueprint(main_bp, url_prefix='/')  # Register the main blueprint
+    # Set up logging for debugging
+    setup_logging(app)
 
     return app
+
+def register_blueprints(app):
+    # Import and register blueprints
+    from app.blueprints.main import main_bp
+    app.register_blueprint(main_bp, url_prefix='/')
+
+    from app.blueprints.home import home_blueprint
+    app.register_blueprint(home_blueprint, url_prefix='/home')
+
+    from app.blueprints.chatbot import chatbot_bp
+    app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
+
+    # Register hitlragagent blueprint
+    from app.blueprints.hitlragagent import hitlrag_bp
+    app.register_blueprint(hitlrag_bp, url_prefix='/hitlragagent')
+
+def setup_logging(app):
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    app.logger.info("Logging is set up successfully.")

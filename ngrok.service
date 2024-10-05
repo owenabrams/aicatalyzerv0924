@@ -1,0 +1,12 @@
+[Unit]
+Description=Ngrok Tunnel Service
+After=network.target
+
+[Service]
+User=ubuntu
+ExecStart=/usr/local/bin/ngrok start my-app --config /home/ubuntu/.ngrok2/ngrok.yml
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

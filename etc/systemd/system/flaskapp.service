@@ -1,0 +1,12 @@
+[Unit]
+Description=Flask Application Service
+After=network.target ngrok.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/home/ubuntu/venv/bin/python /home/ubuntu/run.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
