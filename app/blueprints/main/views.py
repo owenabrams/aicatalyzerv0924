@@ -1,18 +1,15 @@
 # app/blueprints/main/views.py
-# app/blueprints/main/views.py
-
-from flask import Blueprint, current_app
 
 import os
 import logging
 import openai
-from flask import request, jsonify
+from flask import Blueprint, request, jsonify
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
 
 
 
-
+from flask import current_app
 from app import db
 from app.models import Message
 from app.context_manager import save_context, get_context
@@ -24,18 +21,24 @@ import traceback
 
 
 
+
+from . import main_bp  # Import the blueprint
+
 # Load environment variables
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-
-
 main_bp = Blueprint('main_bp', __name__)
+
+@main_bp.route('/test', methods=['GET'])
+def test_route():
+    return "Test route is working!"
+
+
 
 @main_bp.route('/', methods=['GET'])
 def index():
     current_app.logger.info("Accessed the home page ('/').")
-    return "This is a WhatsApp chatbot powered by GPT-3.5-turbo."
-
+    return "This is a WhatsApp chatbot powered by GPT-3.5-turbo. Use the /webchat endpoint to interact with the bot."
 
 
 

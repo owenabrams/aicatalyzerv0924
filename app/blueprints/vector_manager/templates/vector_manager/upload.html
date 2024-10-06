@@ -1,0 +1,17 @@
+<!-- app/blueprints/vector_manager/templates/vector_manager/upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF for Vector Store Creation</title>
+</head>
+<body>
+    <h1>Upload PDF for Vector Store Creation</h1>
+    <form action="{{ url_for('vector_manager.create_vector_store') }}" method="post" enctype="multipart/form-data">
+        <label for="pdf_file">Choose PDF File:</label>
+        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" required>
+        <button type="submit">Upload and Create Vector Stores</button>
+    </form>
+</body>
+</html>

@@ -1,4 +1,5 @@
 # app/models.py
+from . import db  # Import the `db` instance from the app package in app/__init__.py
 
 from datetime import datetime
 

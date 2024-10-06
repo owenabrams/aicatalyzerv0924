@@ -1,6 +1,10 @@
+# Add this import at the top of the file
+from app.blueprints.hitlragagent.views import call_hitlragagent
+
 from flask import Blueprint, request, jsonify, session, current_app
 import openai
 import os
+from app import db  # Import the db object from your app module
 import logging
 import traceback
 import uuid
@@ -98,7 +102,7 @@ def generate_answer(question):
     prompt = (f"Q: {question}\\n"
               "A:")
 
-    response = openai.Completion.create(
+    response = openai.chat.completions.create(
         engine=model_engine,
         prompt=prompt,
         max_tokens=1024,
@@ -212,17 +216,35 @@ def chatgpt():
         # Handle different keywords
         bot_keyword = "bot:"
         db_keyword = "db:"
+        agent_keyword = "agent:"
         is_group_message = '@g.us' in user_id
 
+        # Ignore group messages without the bot keyword
         if is_group_message and not incoming_message.lower().startswith(bot_keyword):
-            return '', 200  # Ignore group messages without the bot keyword
+            return '', 200
 
+        # Remove the bot keyword if present in group messages
         if is_group_message:
             incoming_message = incoming_message[len(bot_keyword):].strip()
 
         # Retrieve and maintain conversation context
         conversation = get_context(user_id)
         context = conversation.get("context", []) if conversation else []
+
+        # Check if the message is intended for the hitlragagent (agent:)
+        if incoming_message.lower().startswith(agent_keyword):
+            hitlrag_message = incoming_message[len(agent_keyword):].strip()
+            try:
+                # Call the hitlragagent function
+                response_text = call_hitlragagent(hitlrag_message)
+                send_whatsapp_message(user_id, response_text, [])
+                return '', 200
+            except Exception as e:
+                # Log and send an error message if something goes wrong with the hitlragagent
+                logging.error(f"Error in call_hitlragagent: {traceback.format_exc()}")
+                response_text = "An error occurred while processing your agent request."
+                send_whatsapp_message(user_id, response_text, [])
+                return '', 200
 
         # Handle database-specific queries
         if incoming_message.lower().startswith(db_keyword):
@@ -235,15 +257,20 @@ def chatgpt():
                 messages.extend(context[-5:])  # Include last 5 messages in context
             messages.append({"role": "user", "content": incoming_message})
 
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                max_tokens=150,
-                temperature=0.7,
-            )
-
-            response_text = response.choices[0].message.content.strip()
-            media_urls = []
+            try:
+                response = openai.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=messages,
+                    max_tokens=150,
+                    temperature=0.7,
+                )
+                response_text = response.choices[0].message.content.strip()
+                media_urls = []
+            except Exception as e:
+                # Handle OpenAI API errors
+                logging.error(f"Error in OpenAI API call: {traceback.format_exc()}")
+                response_text = "An error occurred while generating a response."
+                media_urls = []
 
         # Update conversation context
         context.append({"role": "user", "content": incoming_message})
@@ -265,3 +292,11 @@ def chatgpt():
     except Exception as e:
         logging.error(f"Error in /chatgpt route: {traceback.format_exc()}")
         return str(MessagingResponse().message("An error occurred while processing your request.")), 500
+
+
+
+
+
+
+
+
