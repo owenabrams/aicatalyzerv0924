@@ -1,4 +1,10 @@
 # Add this import at the top of the file
+#from app.blueprints.hitlragagent.agent_workflow import plan_and_execute_app
+
+# Import the function from your new module
+
+from app.blueprints.hitlragagent import get_hitlragagent_response
+
 from app.blueprints.hitlragagent.views import call_hitlragagent
 
 from flask import Blueprint, request, jsonify, session, current_app
@@ -22,6 +28,19 @@ from app.models import Message  # Assuming Message model is used to save convers
 from fuzzywuzzy import process, fuzz
 from app.models import QuestionNew, LinkNew, VideoNew, PictureNew, DocumentNew
 
+# Ensure correct imports in views.py and agent_workflow.py
+from app.blueprints.hitlragagent.helper_functions import (
+    escape_quotes,
+    preprocess_text,
+    determine_vector_store_type,
+    load_vector_store,
+    retrieve_context_per_question,
+    keep_only_relevant_content,
+    answer_question_from_context,
+    replace_t_with_space  # Newly added function
+)
+
+
 
 # Create a Blueprint
 chatbot_bp = Blueprint('chatbot_bp', __name__)
@@ -35,6 +54,7 @@ twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 twilio_whatsapp_number = os.getenv('TWILIO_WHATSAPP_NUMBER')
 twilio_client = Client(twilio_account_sid, twilio_auth_token)
 
+# Rate limiting and other functions remain unchanged
 def preprocess_text(text):
     lemmatizer = WordNetLemmatizer()
     stop_words = set(stopwords.words('english'))
@@ -202,6 +222,7 @@ def format_db_results(results, media_type=None):
 
 
 
+
 # Define a route to handle incoming requests
 @chatbot_bp.route('/chatgpt', methods=['POST'])
 @rate_limited
@@ -235,12 +256,12 @@ def chatgpt():
         if incoming_message.lower().startswith(agent_keyword):
             hitlrag_message = incoming_message[len(agent_keyword):].strip()
             try:
-                # Call the hitlragagent function
-                response_text = call_hitlragagent(hitlrag_message)
+                # Call the function from hitlragagent to get the response
+                response_text = get_hitlragagent_response(hitlrag_message)
                 send_whatsapp_message(user_id, response_text, [])
                 return '', 200
             except Exception as e:
-                # Log and send an error message if something goes wrong with the hitlragagent
+                # Log and send an error message if something goes wrong
                 logging.error(f"Error in call_hitlragagent: {traceback.format_exc()}")
                 response_text = "An error occurred while processing your agent request."
                 send_whatsapp_message(user_id, response_text, [])
@@ -258,7 +279,7 @@ def chatgpt():
             messages.append({"role": "user", "content": incoming_message})
 
             try:
-                response = openai.chat.completions.create(
+                response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=messages,
                     max_tokens=150,
@@ -292,10 +313,6 @@ def chatgpt():
     except Exception as e:
         logging.error(f"Error in /chatgpt route: {traceback.format_exc()}")
         return str(MessagingResponse().message("An error occurred while processing your request.")), 500
-
-
-
-
 
 
 

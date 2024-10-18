@@ -1,14 +1,20 @@
 # app/__init__.py
-
+import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
+# Import necessary components from agent_workflow
+from app.blueprints.hitlragagent.agent_workflow import plan_and_execute_app
+
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
+
+# Initialize the workflow
+#create_workflow()  # Make sure this is called after importing create_workflow
 
 from app.models import *  # Import all models
 
@@ -69,6 +75,5 @@ def register_blueprints(app):
     app.register_blueprint(vector_manager_bp, url_prefix='/vector_manager')
 
 def setup_logging(app):
-    import logging
     logging.basicConfig(level=logging.INFO)
     app.logger.info("Logging is set up successfully.")

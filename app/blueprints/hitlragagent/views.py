@@ -1,7 +1,7 @@
 # app/blueprints/hitlragagent/views.py
 
 from flask import Blueprint
-from .functions_for_pipeline import create_agent
+#from .functions_for_pipeline import create_agent
 from .helper_functions import escape_quotes, retrieve_context_per_question  # Import the function here
 
 import logging
@@ -39,7 +39,7 @@ def call_hitlragagent(query):
         response = None
         try:
             logging.info(f"Starting plan_and_execute_app with context: {context}")
-            for plan_output in plan_and_execute_app.stream(state):
+            for plan_output in plan_and_execute_app.run(state):
                 for _, state_value in plan_output.items():
                     response = state_value.get('response', "No response found.")
         except Exception as e:
